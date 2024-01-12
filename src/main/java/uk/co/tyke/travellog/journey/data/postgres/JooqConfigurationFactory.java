@@ -1,4 +1,4 @@
-package uk.co.tyke.travellog.journey.db;
+package uk.co.tyke.travellog.journey.data.postgres;
 
 import io.micronaut.context.annotation.Factory;
 import org.jooq.Configuration;
