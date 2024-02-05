@@ -4,24 +4,24 @@ import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import uk.co.tyke.travellog.journey.data.JourneyData;
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.JourneyRecord;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.TripPointRecord;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.TripRecord;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.LegRecord;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.LocationRecord;
 import uk.co.tyke.travellog.journey.model.Journey;
-import uk.co.tyke.travellog.journey.model.Trip;
-import uk.co.tyke.travellog.journey.model.TripPoint;
+import uk.co.tyke.travellog.journey.model.Leg;
+import uk.co.tyke.travellog.journey.model.Location;
 
 import javax.inject.Singleton;
 
 import java.util.List;
 
 import static uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Journey.JOURNEY;
-import static uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Trip.TRIP;
-import static uk.co.tyke.travellog.journey.data.postgres.jooq.tables.TripPoint.TRIP_POINT;
+import static uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Leg.LEG;
+import static uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Location.LOCATION;
 
 @Singleton
 public class JourneyPostgresImpl implements JourneyData {
 
-    private DSLContext context;
+    private final DSLContext context;
 
     JourneyPostgresImpl(Configuration config) {
         this.context = config.dsl();
@@ -30,10 +30,6 @@ public class JourneyPostgresImpl implements JourneyData {
     @Override
     public long saveJourney(Journey journey) {
 
-
-        // Need to insert this last as it needs the tripId
-        // so start by inserting the Journey
-
         assert context != null;
         JourneyRecord journeyRecord = context.newRecord(JOURNEY);
         journeyRecord.setName(journey.name());
@@ -41,18 +37,20 @@ public class JourneyPostgresImpl implements JourneyData {
         journeyRecord.store();
         long journeyId = journeyRecord.getJourneyId();
 
-        List<Trip> trips = journey.trips();
-        for (Trip trip: trips) {
-            TripRecord tripRecord = context.newRecord(TRIP);
-            tripRecord.setJourneyId(journeyId);
-            tripRecord.store();
-            long tripId = tripRecord.getTripId();
-            for (TripPoint tripPoint: trip.tripPoints()) {
-                TripPointRecord tripPointRecord = context.newRecord(TRIP_POINT);
-                tripPointRecord.setTripId(tripId);
-                tripPointRecord.setLatitude(tripPointRecord.getLatitude());
-                tripPointRecord.setLongitude(tripPointRecord.getLongitude());
-                tripPointRecord.setAltitude(tripPointRecord.getAltitude());
+        List<Leg> legs = journey.legs();
+        for (Leg leg: legs) {
+            LegRecord legRecord = context.newRecord(LEG);
+            legRecord.setJourneyId(journeyId);
+            legRecord.store();
+            long legId = legRecord.getLegId();
+            for (Location location: leg.locations()) {
+                LocationRecord locationRecord = context.newRecord(LOCATION);
+                locationRecord.setLegId(legId);
+                locationRecord.setLatitude(location.latitude());
+                locationRecord.setLongitude(location.longitude());
+                locationRecord.setAltitude(location.altitude());
+                locationRecord.setCreated(location.time());
+                locationRecord.store();
             }
         }
 

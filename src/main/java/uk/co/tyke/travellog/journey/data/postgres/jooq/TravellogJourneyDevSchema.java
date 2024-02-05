@@ -12,8 +12,8 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Journey;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Trip;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.TripPoint;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Leg;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Location;
 
 
 /**
@@ -35,14 +35,14 @@ public class TravellogJourneyDevSchema extends SchemaImpl {
     public final Journey JOURNEY = Journey.JOURNEY;
 
     /**
-     * The table <code>travellog_journey_dev_schema.trip</code>.
+     * The table <code>travellog_journey_dev_schema.leg</code>.
      */
-    public final Trip TRIP = Trip.TRIP;
+    public final Leg LEG = Leg.LEG;
 
     /**
-     * The table <code>travellog_journey_dev_schema.trip_point</code>.
+     * The table <code>travellog_journey_dev_schema.location</code>.
      */
-    public final TripPoint TRIP_POINT = TripPoint.TRIP_POINT;
+    public final Location LOCATION = Location.LOCATION;
 
     /**
      * No further instances allowed
@@ -61,8 +61,8 @@ public class TravellogJourneyDevSchema extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Journey.JOURNEY,
-            Trip.TRIP,
-            TripPoint.TRIP_POINT
+            Leg.LEG,
+            Location.LOCATION
         );
     }
 }

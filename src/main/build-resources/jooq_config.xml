@@ -39,10 +39,10 @@
 
         <target>
             <!-- The destination package of your generated classes (within the destination directory) -->
-            <packageName>uk.co.tyke.travellog.journey.db.postgres.jooq</packageName>
+            <packageName>uk.co.tyke.travellog.journey.data.postgres.jooq</packageName>
 
             <!-- The destination directory of your generated classes. Using Maven directory layout here -->
-            <directory>/Users/paul/Projects/travellog/microservices/workspace/TravelLog.ms.journey.db.postgres/src/main/java</directory>
+            <directory>/Users/paul/Projects/travellog/microservices/workspace/TravelLog.ms.journey.data.postgres/src/main/java</directory>
         </target>
     </generator>
 </configuration>

@@ -11,11 +11,11 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Journey;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Trip;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.TripPoint;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Leg;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Location;
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.JourneyRecord;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.TripPointRecord;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.TripRecord;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.LegRecord;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.LocationRecord;
 
 
 /**
@@ -30,13 +30,13 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<JourneyRecord> JOURNEY_PKEY = Internal.createUniqueKey(Journey.JOURNEY, DSL.name("journey_pkey"), new TableField[] { Journey.JOURNEY.JOURNEY_ID }, true);
-    public static final UniqueKey<TripRecord> TRIP_PKEY = Internal.createUniqueKey(Trip.TRIP, DSL.name("trip_pkey"), new TableField[] { Trip.TRIP.TRIP_ID }, true);
-    public static final UniqueKey<TripPointRecord> TRIP_POINT_PKEY = Internal.createUniqueKey(TripPoint.TRIP_POINT, DSL.name("trip_point_pkey"), new TableField[] { TripPoint.TRIP_POINT.TRIP_POINT_ID }, true);
+    public static final UniqueKey<LegRecord> LEG_PKEY = Internal.createUniqueKey(Leg.LEG, DSL.name("leg_pkey"), new TableField[] { Leg.LEG.LEG_ID }, true);
+    public static final UniqueKey<LocationRecord> LOCATION_PKEY = Internal.createUniqueKey(Location.LOCATION, DSL.name("location_pkey"), new TableField[] { Location.LOCATION.LOCATION_ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<TripRecord, JourneyRecord> TRIP__TRIP_JOURNEY_ID_FKEY = Internal.createForeignKey(Trip.TRIP, DSL.name("trip_journey_id_fkey"), new TableField[] { Trip.TRIP.JOURNEY_ID }, Keys.JOURNEY_PKEY, new TableField[] { Journey.JOURNEY.JOURNEY_ID }, true);
-    public static final ForeignKey<TripPointRecord, TripRecord> TRIP_POINT__TRIP_POINT_TRIP_ID_FKEY = Internal.createForeignKey(TripPoint.TRIP_POINT, DSL.name("trip_point_trip_id_fkey"), new TableField[] { TripPoint.TRIP_POINT.TRIP_ID }, Keys.TRIP_PKEY, new TableField[] { Trip.TRIP.TRIP_ID }, true);
+    public static final ForeignKey<LegRecord, JourneyRecord> LEG__LEG_JOURNEY_ID_FKEY = Internal.createForeignKey(Leg.LEG, DSL.name("leg_journey_id_fkey"), new TableField[] { Leg.LEG.JOURNEY_ID }, Keys.JOURNEY_PKEY, new TableField[] { Journey.JOURNEY.JOURNEY_ID }, true);
+    public static final ForeignKey<LocationRecord, LegRecord> LOCATION__LOCATION_LEG_ID_FKEY = Internal.createForeignKey(Location.LOCATION, DSL.name("location_leg_id_fkey"), new TableField[] { Location.LOCATION.LEG_ID }, Keys.LEG_PKEY, new TableField[] { Leg.LEG.LEG_ID }, true);
 }

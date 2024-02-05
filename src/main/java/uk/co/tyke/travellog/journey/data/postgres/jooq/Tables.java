@@ -5,8 +5,8 @@ package uk.co.tyke.travellog.journey.data.postgres.jooq;
 
 
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Journey;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Trip;
-import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.TripPoint;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Leg;
+import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Location;
 
 
 /**
@@ -21,12 +21,12 @@ public class Tables {
     public static final Journey JOURNEY = Journey.JOURNEY;
 
     /**
-     * The table <code>travellog_journey_dev_schema.trip</code>.
+     * The table <code>travellog_journey_dev_schema.leg</code>.
      */
-    public static final Trip TRIP = Trip.TRIP;
+    public static final Leg LEG = Leg.LEG;
 
     /**
-     * The table <code>travellog_journey_dev_schema.trip_point</code>.
+     * The table <code>travellog_journey_dev_schema.location</code>.
      */
-    public static final TripPoint TRIP_POINT = TripPoint.TRIP_POINT;
+    public static final Location LOCATION = Location.LOCATION;
 }
