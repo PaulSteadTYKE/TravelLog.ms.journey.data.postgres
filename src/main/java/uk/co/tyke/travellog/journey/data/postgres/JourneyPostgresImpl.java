@@ -41,6 +41,7 @@ public class JourneyPostgresImpl implements JourneyData {
         for (Leg leg: legs) {
             LegRecord legRecord = context.newRecord(LEG);
             legRecord.setJourneyId(journeyId);
+            legRecord.setDistance(leg.distance());
             legRecord.store();
             long legId = legRecord.getLegId();
             for (Location location: leg.locations()) {

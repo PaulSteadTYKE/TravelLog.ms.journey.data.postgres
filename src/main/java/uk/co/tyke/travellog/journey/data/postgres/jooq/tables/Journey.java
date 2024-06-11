@@ -9,12 +9,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function4;
+import org.jooq.Function5;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row4;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -66,6 +66,11 @@ public class Journey extends TableImpl<JourneyRecord> {
      * The column <code>travellog_journey_dev_schema.journey.notes</code>.
      */
     public final TableField<JourneyRecord, String> NOTES = createField(DSL.name("notes"), SQLDataType.VARCHAR(1024), this, "");
+
+    /**
+     * The column <code>travellog_journey_dev_schema.journey.thing</code>.
+     */
+    public final TableField<JourneyRecord, Integer> THING = createField(DSL.name("thing"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>travellog_journey_dev_schema.journey.created</code>.
@@ -163,18 +168,18 @@ public class Journey extends TableImpl<JourneyRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Long, String, String, LocalDateTime> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row5<Long, String, String, Integer, LocalDateTime> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function4<? super Long, ? super String, ? super String, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Long, ? super String, ? super String, ? super Integer, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -182,7 +187,7 @@ public class Journey extends TableImpl<JourneyRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Long, ? super String, ? super String, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Long, ? super String, ? super String, ? super Integer, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

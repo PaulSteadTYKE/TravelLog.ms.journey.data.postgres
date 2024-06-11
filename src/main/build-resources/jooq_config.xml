@@ -37,6 +37,7 @@
             <excludes></excludes>
         </database>
 
+
         <target>
             <!-- The destination package of your generated classes (within the destination directory) -->
             <packageName>uk.co.tyke.travellog.journey.data.postgres.jooq</packageName>
