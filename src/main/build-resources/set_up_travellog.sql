@@ -14,6 +14,7 @@ CREATE TABLE "journey" ( -- a journey consists of one or more trips
 CREATE TABLE "leg" (
 	"leg_id" BIGSERIAL primary key,
 	"journey_id" bigint,
+	"distance" integer,
 	"created" timestamp DEFAULT (now())
 );
 
