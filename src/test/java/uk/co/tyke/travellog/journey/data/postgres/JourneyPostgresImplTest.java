@@ -36,7 +36,7 @@ public class JourneyPostgresImplTest {
     @Test
     public void getJourneysTest() {
         List<Journey> journeys = journeyPostgresImpl.getJourneys();
-        Assertions.assertEquals(1, journeys.size());
+        Assertions.assertEquals(7, journeys.size());
     }
 
 }

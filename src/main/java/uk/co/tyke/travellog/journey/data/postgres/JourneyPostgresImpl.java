@@ -1,8 +1,6 @@
 package uk.co.tyke.travellog.journey.data.postgres;
 
-import org.jetbrains.annotations.NotNull;
 import org.jooq.*;
-import org.jooq.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.tyke.travellog.journey.data.JourneyData;
@@ -15,11 +13,8 @@ import uk.co.tyke.travellog.journey.model.Location;
 
 import javax.inject.Singleton;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-// import static org.jooq.Records.mapping;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 import static uk.co.tyke.travellog.journey.data.postgres.jooq.tables.Journey.JOURNEY;
@@ -74,109 +69,24 @@ public class JourneyPostgresImpl implements JourneyData {
         logger.debug("Get Journeys");
         assert context != null;
 
-        @NotNull SelectSeekStep1<Record2<Integer, List<Location>>, Long> legs = context.select(
-                LEG.DISTANCE,
-                multiset(
-                        select(
-                                LOCATION.LATITUDE,
-                                LOCATION.LONGITUDE,
-                                LOCATION.ALTITUDE,
-                                LOCATION.CREATED)
-                                .from(LOCATION)
-                                .where(LOCATION.LEG_ID.eq(LEG.LEG_ID))
-                ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))
-        ).from(LEG)
-//                .where(LEG.DISTANCE).isNotNull()
-                .orderBy(LEG.LEG_ID);
-//        .as("legs").convertFrom(l - l.map(mapping(Leg::new)));
-
-
-//                .fetch(mapping(Leg::new));
-
-        var legs2 = context.select(
-                LEG.DISTANCE,
-                multiset(
-                        select(
-                            LOCATION.LATITUDE,
-                            LOCATION.LONGITUDE,
-                            LOCATION.ALTITUDE,
-                            LOCATION.CREATED)
-                            .from(LOCATION).where(LOCATION.LEG_ID.eq(LEG.LEG_ID)) // select
-//                    .fetch(mapping(Location::new))
-                    ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))// multiset
-                ) // select
-                .from(LEG)
-                .fetch();
-//                .fetch(mapping(Leg::new));
-
-       // Try getting journeys with legs, no locations then build in locations when working.
-
-        var journeys2 = context.select(
+        return context.select(
                 JOURNEY.NAME,
                 JOURNEY.NOTES,
                 multiset (
-                     select (
-                        LEG.DISTANCE,
-                        multiset(
-                                select(
-                                        LOCATION.LATITUDE,
-                                        LOCATION.LONGITUDE,
-                                        LOCATION.ALTITUDE,
-                                        LOCATION.CREATED)
-                                        .from(LOCATION).where(LOCATION.LEG_ID.eq(LEG.LEG_ID)) // select location
-//                    .fetch(mapping(Location::new))
-                        ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))// multiset location
-                     ).from(LEG).where(LEG.JOURNEY_ID.eq(JOURNEY.JOURNEY_ID))  // select leg
+                        select (
+                                LEG.DISTANCE,
+                                multiset(
+                                        select(
+                                                LOCATION.LATITUDE,
+                                                LOCATION.LONGITUDE,
+                                                LOCATION.ALTITUDE,
+                                                LOCATION.CREATED)
+                                                .from(LOCATION).where(LOCATION.LEG_ID.eq(LEG.LEG_ID)) // select location
+                                ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))// multiset location
+                        ).from(LEG).where(LEG.JOURNEY_ID.eq(JOURNEY.JOURNEY_ID))  // select leg
                 ).as("legs").convertFrom(l -> l.map(mapping(Leg::new))) // multiset leg
-
-                ) // select journey
-                .from(JOURNEY)
-                .fetch();
-
-
-        List<Journey> journeys3 = context.select(
-                        JOURNEY.NAME,
-                        JOURNEY.NOTES,
-                        multiset (
-                                select (
-                                        LEG.DISTANCE,
-                                        multiset(
-                                                select(
-                                                        LOCATION.LATITUDE,
-                                                        LOCATION.LONGITUDE,
-                                                        LOCATION.ALTITUDE,
-                                                        LOCATION.CREATED)
-                                                        .from(LOCATION).where(LOCATION.LEG_ID.eq(LEG.LEG_ID)) // select location
-//                    .fetch(mapping(Location::new))
-                                        ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))// multiset location
-                                ).from(LEG).where(LEG.JOURNEY_ID.eq(JOURNEY.JOURNEY_ID))  // select leg
-                        ).as("legs").convertFrom(l -> l.map(mapping(Leg::new))) // multiset leg
-
-                ) // select journey
-                .from(JOURNEY)
-                .fetch(mapping(Journey::new));
-
-
-
-
-
-        List<Location> result = context.select(
-                        LOCATION.LATITUDE,
-                        LOCATION.LONGITUDE,
-                        LOCATION.ALTITUDE,
-                        LOCATION.CREATED)
-                .from(LOCATION)
-                .orderBy(LOCATION.LOCATION_ID)
-                .fetch(mapping(Location::new));
-
-        logger.info("Number of locations returned: {}", result.size());
-
-        logger.info("Number of legs returned: {}", legs.fetchMaps().size());
-
-
-        List<Journey> journeys = new ArrayList<>();
-        journeys.add(new Journey("name", "notes", null));
-        return journeys;
-
+        ) // select journey
+        .from(JOURNEY)
+        .fetch(mapping(Journey::new));
     }
 }
