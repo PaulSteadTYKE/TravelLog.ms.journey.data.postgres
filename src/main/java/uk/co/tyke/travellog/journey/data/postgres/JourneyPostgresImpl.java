@@ -8,6 +8,7 @@ import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.JourneyRec
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.LegRecord;
 import uk.co.tyke.travellog.journey.data.postgres.jooq.tables.records.LocationRecord;
 import uk.co.tyke.travellog.journey.model.Journey;
+import uk.co.tyke.travellog.journey.model.JourneyDetail;
 import uk.co.tyke.travellog.journey.model.Leg;
 import uk.co.tyke.travellog.journey.model.Location;
 
@@ -33,16 +34,16 @@ public class JourneyPostgresImpl implements JourneyData {
     }
 
     @Override
-    public long saveJourney(Journey journey) {
+    public long saveJourney(JourneyDetail journey) {
 
         assert context != null;
         JourneyRecord journeyRecord = context.newRecord(JOURNEY);
-        journeyRecord.setName(journey.name());
-        journeyRecord.setNotes(journey.notes());
+        journeyRecord.setName(journey.getName());
+        journeyRecord.setNotes(journey.getNotes());
         journeyRecord.store();
         long journeyId = journeyRecord.getJourneyId();
 
-        List<Leg> legs = journey.legs();
+        List<Leg> legs = journey.getLegs();
         for (Leg leg : legs) {
             LegRecord legRecord = context.newRecord(LEG);
             legRecord.setJourneyId(journeyId);
@@ -70,23 +71,37 @@ public class JourneyPostgresImpl implements JourneyData {
         assert context != null;
 
         return context.select(
-                JOURNEY.NAME,
-                JOURNEY.NOTES,
-                multiset (
-                        select (
-                                LEG.DISTANCE,
-                                multiset(
-                                        select(
-                                                LOCATION.LATITUDE,
-                                                LOCATION.LONGITUDE,
-                                                LOCATION.ALTITUDE,
-                                                LOCATION.CREATED)
-                                                .from(LOCATION).where(LOCATION.LEG_ID.eq(LEG.LEG_ID)) // select location
-                                ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))// multiset location
-                        ).from(LEG).where(LEG.JOURNEY_ID.eq(JOURNEY.JOURNEY_ID))  // select leg
-                ).as("legs").convertFrom(l -> l.map(mapping(Leg::new))) // multiset leg
-        ) // select journey
-        .from(JOURNEY)
-        .fetch(mapping(Journey::new));
+                        JOURNEY.JOURNEY_ID,
+                        JOURNEY.NAME,
+                        JOURNEY.NOTES
+                ) // select journey
+                .from(JOURNEY)
+                .fetch(mapping(Journey::new));
+    }
+
+    @Override
+    public JourneyDetail getJourney(long id) {
+
+        return context.select(
+                        JOURNEY.JOURNEY_ID,
+                        JOURNEY.NAME,
+                        JOURNEY.NOTES,
+                        multiset(
+                                select(
+                                        LEG.DISTANCE,
+                                        multiset(
+                                                select(
+                                                        LOCATION.LATITUDE,
+                                                        LOCATION.LONGITUDE,
+                                                        LOCATION.ALTITUDE,
+                                                        LOCATION.CREATED)
+                                                        .from(LOCATION).where(LOCATION.LEG_ID.eq(LEG.LEG_ID)) // select location
+                                        ).as("locations").convertFrom(l -> l.map(mapping(Location::new)))// multiset location
+                                ).from(LEG).where(LEG.JOURNEY_ID.eq(JOURNEY.JOURNEY_ID))  // select leg
+                        ).as("legs").convertFrom(l -> l.map(mapping(Leg::new))) // multiset leg
+                )// select journey
+                .from(JOURNEY).where(JOURNEY.JOURNEY_ID.eq(id))
+                .fetch(mapping(JourneyDetail::new)).get(0);
+
     }
 }
