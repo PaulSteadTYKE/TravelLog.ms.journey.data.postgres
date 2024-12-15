@@ -19,8 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>uk.co.tyke.travellog</groupId>
-            <artifactId>journey.model</artifactId>
+            <groupId>uk.co.tyke</groupId>
+            <artifactId>travellog.journey.model</artifactId>
             <version>1.0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
