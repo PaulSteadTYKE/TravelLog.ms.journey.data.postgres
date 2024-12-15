@@ -8,14 +8,14 @@
     <artifactId>travellog.journey.data.postgres</artifactId>
     <version>1.0.1-SNAPSHOT</version>
 
-     <properties>
+    <properties>
         <packaging>jar</packaging>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-         <junit.jupiter.version>5.9.1</junit.jupiter.version>
-         <junit.platform.version>1.9.1</junit.platform.version>
-     </properties>
+        <junit.jupiter.version>5.9.1</junit.jupiter.version>
+        <junit.platform.version>1.9.1</junit.platform.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -42,6 +42,16 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-compiler</artifactId>
             <version>1.9.20</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-core</artifactId>
+            <version>4.1.11</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-inject-java</artifactId>
+            <version>4.1.11</version>
         </dependency>
 
         <!--  Test -->
